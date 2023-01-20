@@ -10,21 +10,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  format:
+  terraform:
     name: terraform cli
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
 
-    # https://github.com/marketplace/actions/hashicorp-setup-terraform
     - uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: latest
 
-    # https://developer.hashicorp.com/terraform/cli/commands/fmt
+    - name: Terraform version
+      run: terraform -version
+
+    - name: Terraform init
+      run: terraform init -no-color
+
     - name: Terraform fmt
       run: terraform fmt -check -recursive    
-    # https://developer.hashicorp.com/terraform/cli/commands/validate
+
     - name: Terraform validate
       run: terraform validate -no-color
 
