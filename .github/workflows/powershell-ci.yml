@@ -29,15 +29,15 @@ jobs:
       # https://docs.github.com/en/actions/learn-github-actions/variables
       - name: Echo GitHub Variables
         run: |
-          echo "$GITHUB_BASE_REF"
-          echo "$GITHUB_HEAD_REF"
-          echo "$GITHUB_JOB"
-          echo "$GITHUB_REF"
-          echo "$GITHUB_REF_NAME"
-          echo "$GITHUB_REF_TYPE"
-          echo "$GITHUB_RUN_ATTEMPT"
-          echo "$GITHUB_RUN_ID"
-          echo "$GITHUB_RUN_NUMBER"
+          echo "$env:GITHUB_BASE_REF"
+          echo "$env:GITHUB_HEAD_REF"
+          echo "$env:GITHUB_JOB"
+          echo "$env:GITHUB_REF"
+          echo "$env:GITHUB_REF_NAME"
+          echo "$env:GITHUB_REF_TYPE"
+          echo "$env:GITHUB_RUN_ATTEMPT"
+          echo "$env:GITHUB_RUN_ID"
+          echo "$env:GITHUB_RUN_NUMBER"
 
       # https://pester.dev/docs/commands/Invoke-Pester
       - name: Test
