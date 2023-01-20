@@ -1,0 +1,48 @@
+name: PowerShell CI
+
+# Controls when the workflow will run
+on:
+  pull_request:
+    types: [assigned, opened, edited, synchronize, reopened]
+  push:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+    runs-on: windows-2022
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      # Runs a set of commands using the runners shell
+      # https://docs.github.com/en/actions/learn-github-actions/variables
+      - name: Echo GitHub Variables
+        run: |
+          echo "$GITHUB_BASE_REF"
+          echo "$GITHUB_HEAD_REF"
+          echo "$GITHUB_JOB"
+          echo "$GITHUB_REF"
+          echo "$GITHUB_REF_NAME"
+          echo "$GITHUB_REF_TYPE"
+          echo "$GITHUB_RUN_ATTEMPT"
+          echo "$GITHUB_RUN_ID"
+          echo "$GITHUB_RUN_NUMBER"
+
+      # https://pester.dev/docs/commands/Invoke-Pester
+      - name: Test
+        run: Invoke-Pester -Path '.\PowerShell'
+
+      # Runs a set of commands using the runners shell
+      - name: Package
+        run: .\build\PackagePowerShell.ps1

@@ -1,0 +1,57 @@
+name: Terraform CI
+on:
+  pull_request:
+    types: [assigned, opened, edited, synchronize, reopened]
+  push:
+    branches: [ "master" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  format:
+    name: terraform fmt
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      name: checkout
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    - uses: hashicorp/setup-terraform@v2
+    
+    - name: terraform fmt
+      id: fmt
+      run: terraform fmt -recursive
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: 'chore: automated terraform fmt'
+
+  lint:
+    name: tflint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      name: checkout
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    
+    - uses: actions/cache@v3
+      name: Cache TFLint plugin dir
+      with:
+        path: ~/.tflint.d/plugins
+        key: tflint-${{ hashFiles('.tflint.hcl') }}
+    
+    - uses: terraform-linters/setup-tflint@v3
+      name: Setup TFLint
+      with:
+        tflint_version: latest
+
+    - name: Show TFLint version
+      run: tflint --version
+
+    - name: Init TFLint
+      run: tflint --init
+
+    - name: Run TFLint
+      run: tflint -f compact
