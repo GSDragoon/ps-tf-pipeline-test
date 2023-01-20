@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  powershell:
+  ci:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
     runs-on: windows-2022
@@ -30,30 +30,25 @@ jobs:
           echo "GITHUB_RUN_ID = $env:GITHUB_RUN_ID"
           echo "GITHUB_RUN_NUMBER = $env:GITHUB_RUN_NUMBER"
 
-      - name: Test
+      - name: PowerShell Test
         run: .\build\TestPowerShell.ps1
 
-      - name: Package
+      - name: PowerShell Package
         run: .\build\PackagePowerShell.ps1
-  
-  terraform:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
 
-    # https://github.com/marketplace/actions/hashicorp-setup-terraform
-    - uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: latest
+      # https://github.com/marketplace/actions/hashicorp-setup-terraform
+      - uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: latest
 
-    - name: Terraform version
-      run: terraform -version
+      - name: Terraform version
+        run: terraform -version
 
-    - name: Terraform init
-      run: terraform init -no-color
+      - name: Terraform init
+        run: terraform init -no-color
 
-    - name: Terraform fmt
-      run: terraform fmt -check -recursive    
+      - name: Terraform fmt
+        run: terraform fmt -check -recursive    
 
-    - name: Terraform validate
-      run: terraform validate -no-color
+      - name: Terraform validate
+        run: terraform validate -no-color
