@@ -5,12 +5,12 @@ on:
     types: [assigned, opened, edited, synchronize, reopened]
   push:
     branches: [ "master" ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+
 jobs:
-  ci:
+  
+  powershell:
     # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
     runs-on: windows-2022
@@ -30,25 +30,31 @@ jobs:
           echo "GITHUB_RUN_ID = $env:GITHUB_RUN_ID"
           echo "GITHUB_RUN_NUMBER = $env:GITHUB_RUN_NUMBER"
 
-      - name: PowerShell Test
+      - name: Test
         run: .\build\TestPowerShell.ps1
 
-      - name: PowerShell Package
+      - name: Package
         run: .\build\PackagePowerShell.ps1
 
-      # https://github.com/marketplace/actions/hashicorp-setup-terraform
-      - uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: latest
+  
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
 
-      - name: Terraform version
-        run: terraform -version
+    # https://github.com/marketplace/actions/hashicorp-setup-terraform
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: latest
 
-      - name: Terraform init
-        run: terraform init -no-color
+    - name: Terraform version
+      run: terraform -version
 
-      - name: Terraform fmt
-        run: terraform fmt -check -recursive    
+    - name: Terraform init
+      run: terraform init -no-color
 
-      - name: Terraform validate
-        run: terraform validate -no-color
+    - name: Terraform fmt
+      run: terraform fmt -check -recursive    
+
+    - name: Terraform validate
+      run: terraform validate -no-color
