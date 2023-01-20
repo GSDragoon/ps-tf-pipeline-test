@@ -25,24 +25,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      # Runs a set of commands using the runners shell
       # https://docs.github.com/en/actions/learn-github-actions/variables
       - name: Echo GitHub Variables
         run: |
-          echo "$env:GITHUB_BASE_REF"
-          echo "$env:GITHUB_HEAD_REF"
-          echo "$env:GITHUB_JOB"
-          echo "$env:GITHUB_REF"
-          echo "$env:GITHUB_REF_NAME"
-          echo "$env:GITHUB_REF_TYPE"
-          echo "$env:GITHUB_RUN_ATTEMPT"
-          echo "$env:GITHUB_RUN_ID"
-          echo "$env:GITHUB_RUN_NUMBER"
+          echo "GITHUB_BASE_REF = $env:GITHUB_BASE_REF"
+          echo "GITHUB_HEAD_REF = $env:GITHUB_HEAD_REF"
+          echo "GITHUB_JOB = $env:GITHUB_JOB"
+          echo "GITHUB_REF = $env:GITHUB_REF"
+          echo "GITHUB_REF_NAME = $env:GITHUB_REF_NAME"
+          echo "GITHUB_REF_TYPE = $env:GITHUB_REF_TYPE"
+          echo "GITHUB_RUN_ATTEMPT = $env:GITHUB_RUN_ATTEMPT"
+          echo "GITHUB_RUN_ID = $env:GITHUB_RUN_ID"
+          echo "GITHUB_RUN_NUMBER = $env:GITHUB_RUN_NUMBER"
 
-      # https://pester.dev/docs/commands/Invoke-Pester
       - name: Test
-        run: Invoke-Pester -Path '.\PowerShell'
+        run: .\build\TestPowerShell.ps1
 
-      # Runs a set of commands using the runners shell
       - name: Package
         run: .\build\PackagePowerShell.ps1
