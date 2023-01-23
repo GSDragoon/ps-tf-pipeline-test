@@ -4,9 +4,9 @@ on:
   pull_request:
     types: [assigned, opened, edited, synchronize, reopened]
 
-  push:
+  # push:
     # Run on pushes to feature branches?
-    branches: [ "master" ]
+    # branches: [ "master" ]
 
   # Allow manual execution on the website
   workflow_dispatch:

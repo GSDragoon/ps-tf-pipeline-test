@@ -49,5 +49,5 @@ jobs:
         run: |
           echo "Test step for delivering PowerShell module"
           echo "NOT_SECURE_TEST_SECRET: $deliver_secret"
-          Get-ChildItem -Filter '*.nupkg'"
+          Get-ChildItem -Filter '*.nupkg'
           echo "Delivery Done!"
