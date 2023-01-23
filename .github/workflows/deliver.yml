@@ -3,6 +3,10 @@ name: Deliver
 on:
   push:
     branches: [ "master" ]
+  
+  # Allow manual execution on the website
+  # Can be used to publish pre-release packages for PRs and feature branches
+  workflow_dispatch:
 
 
 jobs:

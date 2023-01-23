@@ -4,13 +4,16 @@ on:
   pull_request:
     types: [assigned, opened, edited, synchronize, reopened]
 
-  # push:
+  push:
     # Run on pushes to feature branches?
-    # branches: [ "master" ]
+    branches: [ "master" ]
+
+  # Allow manual execution on the website
+  workflow_dispatch:
 
   # Also reusable for Deliver Workflow
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows
-  workflow_dispatch:
+  workflow_call:
 
 
 jobs:
