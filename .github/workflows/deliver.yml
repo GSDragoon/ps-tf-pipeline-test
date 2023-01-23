@@ -15,8 +15,9 @@ jobs:
   # https://docs.github.com/en/actions/using-workflows/reusing-workflows
   CI:
     uses: ./.github/workflows/ci.yml
-  
-  powershell:
+
+
+  deliver-powershell:
     runs-on: windows-2022
     
     # Needs CI to pass before delivering
@@ -48,6 +49,6 @@ jobs:
           deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
         run: |
           echo "Test step for delivering PowerShell module"
-          echo "NOT_SECURE_TEST_SECRET: $deliver_secret"
+          echo "NOT_SECURE_TEST_SECRET: $env.deliver_secret"
           Get-ChildItem -Filter '*.nupkg'
           echo "Delivery Done!"

@@ -45,6 +45,7 @@ jobs:
         run: .\build\PackagePowerShell.ps1
       
       # Upload artifact so Deliver Workflow can download and publish it
+      # Make this a job input parameter to only upload when needed (calling from Deliver)?
       - name: Upload Package Artifact
         uses: actions/upload-artifact@v3
         with:
@@ -74,14 +75,14 @@ jobs:
       with:
         terraform_version: latest
 
-    - name: Terraform version
+    - name: Version
       run: terraform -version
 
-    - name: Terraform init
+    - name: Initialize
       run: terraform init -no-color
 
-    - name: Terraform fmt
+    - name: Format
       run: terraform fmt -check -recursive    
 
-    - name: Terraform validate
+    - name: Validate
       run: terraform validate -no-color
