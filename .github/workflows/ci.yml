@@ -3,8 +3,13 @@ name: Continuous Integration
 on:
   pull_request:
     types: [assigned, opened, edited, synchronize, reopened]
-  push:
-    branches: [ "master" ]
+
+  # push:
+    # Run on pushes to feature branches?
+    # branches: [ "master" ]
+
+  # Also reusable for Deliver Workflow
+  # https://docs.github.com/en/actions/using-workflows/reusing-workflows
   workflow_dispatch:
 
 
@@ -35,12 +40,31 @@ jobs:
 
       - name: Package
         run: .\build\PackagePowerShell.ps1
+      
+      # Upload artifact so Deliver Workflow can download and publish it
+      - name: Upload Package Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: powershell-package
+          path: PowerShell/bin/*.nupkg
 
   
   terraform:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+
+    - name: Echo GitHub Variables
+      run: |
+        echo "GITHUB_BASE_REF = $GITHUB_BASE_REF"
+        echo "GITHUB_HEAD_REF = $GITHUB_HEAD_REF"
+        echo "GITHUB_JOB = $GITHUB_JOB"
+        echo "GITHUB_REF = $GITHUB_REF"
+        echo "GITHUB_REF_NAME = $GITHUB_REF_NAME"
+        echo "GITHUB_REF_TYPE = $GITHUB_REF_TYPE"
+        echo "GITHUB_RUN_ATTEMPT = $GITHUB_RUN_ATTEMPT"
+        echo "GITHUB_RUN_ID = $GITHUB_RUN_ID"
+        echo "GITHUB_RUN_NUMBER = $GITHUB_RUN_NUMBER"
 
     # https://github.com/marketplace/actions/hashicorp-setup-terraform
     - uses: hashicorp/setup-terraform@v2
