@@ -55,6 +55,7 @@ jobs:
         #   Checking the force_delivery option during a manual execution
         #   Pushing to master
         #   Pushing a tag
+        # making a change to test feature branch not running deliver
         if: |
            ${{ 
               inputs.force_delivery || 
