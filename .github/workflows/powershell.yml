@@ -6,7 +6,8 @@ on:
 
   push:
     # Run on pushes to feature branches?
-    branches: [ "master" ]
+    # branches: [ "master" ]
+    branches: [ "*" ]
     tags: [ "[1-9].[0-9]+.[0-9]+" ]
 
   # Allow manual execution on the website
@@ -57,11 +58,9 @@ jobs:
         #   Pushing a tag
         # making a change to test feature branch not running deliver
         if: |
-           ${{ 
               inputs.force_delivery || 
               ( github.event_name	== 'push' && github.ref_name == 'master' ) || 
               ( github.event_name	== 'push' && github.ref_type == 'tag' )
-            }}
         env:
           deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
         run: |
