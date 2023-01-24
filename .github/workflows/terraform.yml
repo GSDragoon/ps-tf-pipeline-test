@@ -1,0 +1,49 @@
+name: Terraform
+
+on:
+  pull_request:
+    types: [assigned, opened, edited, synchronize, reopened]
+
+  push:
+    # Run on pushes to feature branches?
+    branches: [ "master" ]
+
+  # Allow manual execution on the website
+  workflow_dispatch:
+
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Echo GitHub Variables
+      run: |
+        echo "GITHUB_BASE_REF = $GITHUB_BASE_REF"
+        echo "GITHUB_HEAD_REF = $GITHUB_HEAD_REF"
+        echo "GITHUB_JOB = $GITHUB_JOB"
+        echo "GITHUB_REF = $GITHUB_REF"
+        echo "GITHUB_REF_NAME = $GITHUB_REF_NAME"
+        echo "GITHUB_REF_TYPE = $GITHUB_REF_TYPE"
+        echo "GITHUB_RUN_ATTEMPT = $GITHUB_RUN_ATTEMPT"
+        echo "GITHUB_RUN_ID = $GITHUB_RUN_ID"
+        echo "GITHUB_RUN_NUMBER = $GITHUB_RUN_NUMBER"
+
+    # https://github.com/marketplace/actions/hashicorp-setup-terraform
+    - uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: latest
+
+    - name: Version
+      run: terraform -version
+
+    - name: Initialize
+      run: terraform init -no-color
+
+    - name: Format
+      run: terraform fmt -check -recursive    
+
+    - name: Validate
+      run: terraform validate -no-color

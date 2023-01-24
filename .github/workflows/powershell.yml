@@ -1,0 +1,58 @@
+name: PowerShell
+
+on:
+  pull_request:
+    types: [assigned, opened, edited, synchronize, reopened]
+
+  push:
+    # Run on pushes to feature branches?
+    branches: [ "master" ]
+
+  # Allow manual execution on the website
+  workflow_dispatch:
+    input:
+    force_delivery:
+      description: 'Force delivery of the PowerShell module package'
+      required: true
+      type: boolean
+
+
+jobs:
+  powershell:
+    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    # https://github.com/actions/runner-images/blob/main/images/win/Windows2022-Readme.md
+    runs-on: windows-2022
+    steps:
+
+      - uses: actions/checkout@v3
+
+      # https://docs.github.com/en/actions/learn-github-actions/variables
+      - name: Echo GitHub Variables
+        run: |
+          echo "GITHUB_BASE_REF = $env:GITHUB_BASE_REF"
+          echo "GITHUB_HEAD_REF = $env:GITHUB_HEAD_REF"
+          echo "GITHUB_JOB = $env:GITHUB_JOB"
+          echo "GITHUB_REF = $env:GITHUB_REF"
+          echo "GITHUB_REF_NAME = $env:GITHUB_REF_NAME"
+          echo "GITHUB_REF_TYPE = $env:GITHUB_REF_TYPE"
+          echo "GITHUB_RUN_ATTEMPT = $env:GITHUB_RUN_ATTEMPT"
+          echo "GITHUB_RUN_ID = $env:GITHUB_RUN_ID"
+          echo "GITHUB_RUN_NUMBER = $env:GITHUB_RUN_NUMBER"
+
+      - name: Test
+        run: .\build\TestPowerShell.ps1
+
+      - name: Package
+        run: .\build\PackagePowerShell.ps1
+      
+      - name: Deliver
+        # https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context
+        # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
+        if: ${{ inputs.force_delivery || $env:GITHUB_REF_NAME == 'master' || $env:GITHUB_REF_TYPE == 'tag'}}
+        env:
+          deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
+        run: |
+          echo "Test step for delivering PowerShell module"
+          echo "NOT_SECURE_TEST_SECRET: $env:deliver_secret"
+          Get-ChildItem -Filter '*.nupkg'
+          echo "Delivery Done!"
