@@ -10,11 +10,11 @@ on:
 
   # Allow manual execution on the website
   workflow_dispatch:
-    input:
-    force_delivery:
-      description: 'Force delivery of the PowerShell module package'
-      required: true
-      type: boolean
+    inputs:
+      force_delivery:
+        description: 'Force delivery of the PowerShell module package'
+        required: true
+        type: boolean
 
 
 jobs:
