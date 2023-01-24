@@ -53,6 +53,7 @@ jobs:
           deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
         run: |
           echo "Test step for delivering PowerShell module"
-          echo "NOT_SECURE_TEST_SECRET: $env:deliver_secret"
-          Get-ChildItem -Filter '*.nupkg'
+          echo "env deliver_secret: $env:deliver_secret"
+          echo "secrets NOT_SECURE_TEST_SECRET: ${{ secrets.NOT_SECURE_TEST_SECRET }}"
+          Get-ChildItem -Path '.\PowerShell\bin' -Filter '*.nupkg'
           echo "Delivery Done!"
