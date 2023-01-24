@@ -48,7 +48,7 @@ jobs:
       - name: Deliver
         # https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context
         # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
-        if: ${{ inputs.force_delivery || $env:GITHUB_REF_NAME == 'master' || $env:GITHUB_REF_TYPE == 'tag'}}
+        if: ${{ inputs.force_delivery || github.ref_name == 'master' || github.ref_type == 'tag'}}
         env:
           deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
         run: |
