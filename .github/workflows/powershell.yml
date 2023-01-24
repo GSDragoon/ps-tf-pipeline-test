@@ -7,12 +7,14 @@ on:
   push:
     # Run on pushes to feature branches?
     branches: [ "master" ]
+    tags: [ "[1-9].[0-9]+.[0-9]+" ]
 
   # Allow manual execution on the website
   workflow_dispatch:
     inputs:
       force_delivery:
         description: 'Force delivery of the PowerShell module package'
+        default: false
         required: true
         type: boolean
 
@@ -30,6 +32,7 @@ jobs:
       - name: Echo GitHub Variables
         run: |
           echo "GITHUB_BASE_REF = $env:GITHUB_BASE_REF"
+          echo "GITHUB_EVENT_NAME = $env:GITHUB_EVENT_NAME"
           echo "GITHUB_HEAD_REF = $env:GITHUB_HEAD_REF"
           echo "GITHUB_JOB = $env:GITHUB_JOB"
           echo "GITHUB_REF = $env:GITHUB_REF"
@@ -48,11 +51,21 @@ jobs:
       - name: Deliver
         # https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context
         # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
-        if: ${{ inputs.force_delivery || github.ref_name == 'master' || github.ref_type == 'tag'}}
+        # Deliver when:
+        #   Checking the force_delivery option during a manual execution
+        #   Pushing to master
+        #   Pushing a tag
+        if: |
+           ${{ 
+              inputs.force_delivery || 
+              ( github.event_name	== 'push' && github.ref_name == 'master' ) || 
+              ( github.event_name	== 'push' && github.ref_type == 'tag' )
+            }}
         env:
           deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
         run: |
           echo "Test step for delivering PowerShell module"
+          echo "inputs force_delivery: ${{ inputs.force_delivery }}"
           echo "env deliver_secret: $env:deliver_secret"
           echo "secrets NOT_SECURE_TEST_SECRET: ${{ secrets.NOT_SECURE_TEST_SECRET }}"
           Get-ChildItem -Path '.\PowerShell\bin' -Filter '*.nupkg'
