@@ -42,6 +42,12 @@ jobs:
           echo "GITHUB_RUN_ATTEMPT = $env:GITHUB_RUN_ATTEMPT"
           echo "GITHUB_RUN_ID = $env:GITHUB_RUN_ID"
           echo "GITHUB_RUN_NUMBER = $env:GITHUB_RUN_NUMBER"
+      
+      - name: Install IIS
+        run: Enable-WindowsOptionalFeature -Online -FeatureName IIS-WebServerRole
+
+      - name: IIS Reset
+        run: iisreset /RESTART
 
       - name: Test
         run: .\build\TestPowerShell.ps1
