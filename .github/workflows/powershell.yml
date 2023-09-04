@@ -27,7 +27,7 @@ jobs:
     runs-on: windows-2022
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # https://docs.github.com/en/actions/learn-github-actions/variables
       - name: Echo GitHub Variables
