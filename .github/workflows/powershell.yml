@@ -27,7 +27,7 @@ jobs:
     runs-on: windows-2022
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       # https://docs.github.com/en/actions/learn-github-actions/variables
       - name: Echo GitHub Variables
@@ -48,7 +48,7 @@ jobs:
 
       - name: Package
         run: .\build\PackagePowerShell.ps1
-      
+
       - name: Deliver
         # https://docs.github.com/en/actions/learn-github-actions/contexts#inputs-context
         # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
@@ -57,8 +57,8 @@ jobs:
         #   Pushing to master
         #   Pushing a tag
         if: |
-              inputs.force_delivery || 
-              ( github.event_name	== 'push' && github.ref_name == 'master' ) || 
+              inputs.force_delivery ||
+              ( github.event_name	== 'push' && github.ref_name == 'master' ) ||
               ( github.event_name	== 'push' && github.ref_type == 'tag' )
         env:
           deliver_secret: ${{ secrets.NOT_SECURE_TEST_SECRET }}
